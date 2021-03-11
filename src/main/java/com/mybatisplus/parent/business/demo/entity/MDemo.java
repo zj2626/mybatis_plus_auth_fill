@@ -19,7 +19,6 @@ import lombok.Data;
 public class MDemo extends BaseEntity {
 
     private String name;
-
     private String province;
     private String city;
     private String area;
