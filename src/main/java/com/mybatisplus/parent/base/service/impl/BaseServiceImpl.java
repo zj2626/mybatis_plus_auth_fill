@@ -122,26 +122,26 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEnt
         boolean plus = 0 == entityList.size() % batchSize;
         int size = plus ? entityList.size() / batchSize : entityList.size() / batchSize + 1;
 
-        Field companyIdField = null;
-        try {
-            Field declaredField = MybatisSqlQueryInterceptor.checkFieldWithTableField(entityList.toArray()[0].getClass());
-            if (null != declaredField) {
-                final TableField[] annotationsByType = declaredField.getAnnotationsByType(TableField.class);
-                for (TableField tableField : annotationsByType) {
-                    if (FieldFill.INSERT.equals(tableField.fill())) {
-                        companyIdField = declaredField;
-                        break;
-                    }
-                }
-            }
-        } catch (Exception ignore) {
-        }
+        //        Field companyIdField = null;
+        //        try {
+        //            Field declaredField = MybatisSqlQueryInterceptor.checkFieldWithTableField(entityList.toArray()[0].getClass());
+        //            if (null != declaredField) {
+        //                final TableField[] annotationsByType = declaredField.getAnnotationsByType(TableField.class);
+        //                for (TableField tableField : annotationsByType) {
+        //                    if (FieldFill.INSERT.equals(tableField.fill())) {
+        //                        companyIdField = declaredField;
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        } catch (Exception ignore) {
+        //        }
 
         final UserInfoBo userInfoBo = CommonAdminUtils.getSimpleUserFromSystem();
 
         for (int i = 0; i < size; i++) {
             final Collection<T> subEntityList = entityList.stream().skip(i * batchSize).limit(batchSize).collect(Collectors.toList());
-            Field finalCompanyIdField = companyIdField;
+            //            Field finalCompanyIdField = companyIdField;
             subEntityList.forEach(entity -> {
                 if (null == entity.getCreateTime()) {
                     entity.setCreateTime(new Date());
@@ -161,16 +161,19 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEnt
                 if (null == entity.getUpdateUser()) {
                     entity.setUpdateUser(userInfoBo.getLoginName());
                 }
-                try {
-                    if (null != finalCompanyIdField) {
-                        finalCompanyIdField.setAccessible(true);
-                        if (null == finalCompanyIdField.get(entity)) {
-                            finalCompanyIdField.set(entity, userInfoBo.getCompanyId());
-                        }
-                    }
-                } catch (Exception e) {
-                    logger.info("设置[{}]属性异常, {}", StringKeyCode.COMPANY_ID_NAME, e.getMessage());
+                if (null == entity.getCompanyId()) {
+                    entity.setCompanyId(userInfoBo.getCompanyId());
                 }
+                //                try {
+                //                    if (null != finalCompanyIdField) {
+                //                        finalCompanyIdField.setAccessible(true);
+                //                        if (null == finalCompanyIdField.get(entity)) {
+                //                            finalCompanyIdField.set(entity, userInfoBo.getCompanyId());
+                //                        }
+                //                    }
+                //                } catch (Exception e) {
+                //                    logger.info("设置[{}]属性异常, {}", StringKeyCode.COMPANY_ID_NAME, e.getMessage());
+                //                }
 
                 entity.setDeleteStatus(true);
             });

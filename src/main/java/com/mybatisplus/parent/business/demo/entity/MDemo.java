@@ -23,11 +23,4 @@ public class MDemo extends BaseEntity {
     private String city;
     private String area;
     private String address;
-
-    /*
-     * 公司ID
-     */
-    @TableQueryField
-    @TableField(fill = FieldFill.INSERT)
-    private Long companyId;
 }

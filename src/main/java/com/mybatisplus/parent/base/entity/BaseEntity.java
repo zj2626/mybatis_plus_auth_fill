@@ -1,6 +1,7 @@
 package com.mybatisplus.parent.base.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.mybatisplus.parent.mybatis.annotation.TableQueryField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -54,4 +55,11 @@ public abstract class BaseEntity implements Serializable {
     @TableLogic(value = "true", delval = "false")
     @TableField(fill = FieldFill.INSERT)
     private Boolean deleteStatus;
+
+    /*
+     * 公司ID
+     */
+    @TableQueryField
+    @TableField(fill = FieldFill.INSERT)
+    private Long companyId;
 }
